@@ -1,0 +1,88 @@
+﻿@model Biblioteca.Models.Book
+
+@{
+    ViewBag.Title = "Details";
+    var authors = String.Join(", ", Model.Authors.Select(author => author.FirstName + " " + author.LastName));
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Book</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            Authors
+        </dt>
+
+        <dd>
+            @foreach (var item in Model.Authors)
+            {
+                var authorName = item.FirstName + " " + item.LastName;
+                @Html.ActionLink(authorName, "Details", "Authors", new { id = item.AuthorID }, null) <br>
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.YearReleased)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.YearReleased)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+    </dl>
+
+    <h4>Book Copies</h4>
+    <table class="table">
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Publisher
+            </th>
+            <th>
+                Available
+            </th>
+        </tr>
+
+        @foreach (var item in Model.BookCopies)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CopyID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher.Name)
+                </td>
+                <td>
+                    @{ 
+                        var isAvailable = item.isAvailable();
+                    }
+                    @Html.DisplayFor(modelItem => isAvailable)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.BookID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

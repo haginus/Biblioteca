@@ -19,7 +19,6 @@ namespace Biblioteca
         {
             var ctx = new ApplicationDbContext();
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(ctx));
-            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ctx));
 
             if(!roleManager.RoleExists("Admin"))
             {

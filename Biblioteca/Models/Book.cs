@@ -23,8 +23,8 @@ namespace Biblioteca.Models
     
         public int BookID { get; set; }
         public string Name { get; set; }
-        public System.DateTime DateReleased { get; set; }
         public string Description { get; set; }
+        public Nullable<int> YearReleased { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BookCopy> BookCopies { get; set; }

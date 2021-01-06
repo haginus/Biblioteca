@@ -4,12 +4,12 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="LibraryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="LibraryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Author">
           <Key>
             <PropertyRef Name="AuthorID" />
           </Key>
-          <Property Name="AuthorID" Type="int" Nullable="false" />
+          <Property Name="AuthorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
@@ -17,9 +17,9 @@
           <Key>
             <PropertyRef Name="BookID" />
           </Key>
-          <Property Name="BookID" Type="int" Nullable="false" />
+          <Property Name="BookID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="DateReleased" Type="datetime" Nullable="false" />
+          <Property Name="YearReleased" Type="int" />
           <Property Name="Description" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="BookAuthor">
@@ -34,7 +34,7 @@
           <Key>
             <PropertyRef Name="CopyID" />
           </Key>
-          <Property Name="CopyID" Type="int" Nullable="false" />
+          <Property Name="CopyID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BookID" Type="int" Nullable="false" />
           <Property Name="PublisherID" Type="int" Nullable="false" />
           <Property Name="Pages" Type="int" />
@@ -43,7 +43,7 @@
           <Key>
             <PropertyRef Name="CustomerID" />
           </Key>
-          <Property Name="CustomerID" Type="int" Nullable="false" />
+          <Property Name="CustomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CNP" Type="nvarchar" MaxLength="50" />
           <Property Name="FirstName" Type="nchar" MaxLength="50" />
           <Property Name="LastName" Type="nchar" MaxLength="50" />
@@ -52,14 +52,14 @@
           <Key>
             <PropertyRef Name="PublisherID" />
           </Key>
-          <Property Name="PublisherID" Type="int" Nullable="false" />
+          <Property Name="PublisherID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Rent">
           <Key>
             <PropertyRef Name="RentID" />
           </Key>
-          <Property Name="RentID" Type="int" Nullable="false" />
+          <Property Name="RentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CopyID" Type="int" Nullable="false" />
           <Property Name="CustomerID" Type="int" Nullable="false" />
           <Property Name="DateStart" Type="datetime" Nullable="false" />
@@ -176,8 +176,7 @@
             <End Role="Rent" EntitySet="Rent" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="LibraryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -196,10 +195,10 @@
           </Key>
           <Property Name="BookID" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="DateReleased" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="BookCopies" Relationship="Self.FK_dbo_BookCopy_dbo_BookID" FromRole="Book" ToRole="BookCopy" />
           <NavigationProperty Name="Authors" Relationship="Self.BookAuthor" FromRole="Book" ToRole="Author" />
+          <Property Name="YearReleased" Type="Int32" />
         </EntityType>
         <EntityType Name="BookCopy">
           <Key>
@@ -347,9 +346,9 @@
           <EntitySetMapping Name="Books">
             <EntityTypeMapping TypeName="LibraryModel.Book">
               <MappingFragment StoreEntitySet="Book">
+                <ScalarProperty Name="YearReleased" ColumnName="YearReleased" />
                 <ScalarProperty Name="BookID" ColumnName="BookID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="DateReleased" ColumnName="DateReleased" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
               </MappingFragment>
             </EntityTypeMapping>

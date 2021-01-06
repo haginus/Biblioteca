@@ -19,6 +19,27 @@ namespace Biblioteca.Models
         {
             this.Rents = new HashSet<Rent>();
         }
+
+        public Rent getLastRent()
+        {
+            if (this.Rents.Count == 0)
+                return null;
+
+            Rent max = new Rent();
+            max.RentID = 0;
+            foreach(Rent rent in this.Rents)
+            {
+                if (rent.RentID > max.RentID)
+                    max = rent;
+            }
+            return max;
+        }
+
+        public bool isAvailable()
+        {
+            Rent lastRent = this.getLastRent();
+            return lastRent == null ? true : lastRent.IsReturned;
+        }
     
         public int CopyID { get; set; }
         public int BookID { get; set; }
