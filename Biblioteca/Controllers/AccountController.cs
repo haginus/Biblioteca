@@ -154,7 +154,6 @@ namespace Biblioteca.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var ctx = new ApplicationDbContext();
-                var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(ctx));
                 var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(ctx));
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
