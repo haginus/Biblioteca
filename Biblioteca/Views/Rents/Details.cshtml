@@ -1,0 +1,66 @@
+﻿@model Biblioteca.Models.Rent
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Rent</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateStart)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateStart)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateEnd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateEnd)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsReturned)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsReturned)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateReturned)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateReturned)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookCopy.CopyID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookCopy.CopyID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Customer.CNP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Customer.CNP)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RentID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

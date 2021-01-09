@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using Biblioteca.Models;
 
 namespace Biblioteca.Controllers
@@ -38,6 +39,11 @@ namespace Biblioteca.Controllers
         // GET: Books/Create
         public ActionResult Create()
         {
+            var serializer = new JavaScriptSerializer();
+            var list = db.Authors.ToList().Select(x => new { name = x.FirstName + ' ' + x.LastName, id = x.AuthorID } );
+            var json = serializer.Serialize(list);
+            ViewBag.authors = json;
+            ViewBag.selectedAuthors = "[]";
             return View();
         }
 
@@ -46,12 +52,17 @@ namespace Biblioteca.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Name,YearReleased,Description")] Book book)
+        public ActionResult Create([Bind(Include = "Name,YearReleased,Description")] Book book, string Authors)
         {
+            string[] authors = Authors.Split(',');
             if (ModelState.IsValid)
             {
                 db.Books.Add(book);
                 db.SaveChanges();
+                foreach (var authorId in authors)
+                {
+                    db.Database.ExecuteSqlCommand("INSERT INTO BookAuthor VALUES (" + book.BookID + ", " + authorId + ")");
+                }
                 return RedirectToAction("Index");
             }
 
@@ -70,6 +81,13 @@ namespace Biblioteca.Controllers
             {
                 return HttpNotFound();
             }
+            var serializer = new JavaScriptSerializer();
+            var list = db.Authors.ToList().Select(x => new { name = x.FirstName + ' ' + x.LastName, id = x.AuthorID });
+            var json = serializer.Serialize(list);
+            ViewBag.authors = json;
+            var selectedList = book.Authors.Select(x => x.AuthorID);
+            var jsonSelected = serializer.Serialize(selectedList);
+            ViewBag.selectedAuthors = jsonSelected;
             return View(book);
         }
 
@@ -78,12 +96,18 @@ namespace Biblioteca.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "BookID,Name,YearReleased,Description")] Book book)
+        public ActionResult Edit([Bind(Include = "BookID,Name,YearReleased,Description")] Book book, string Authors)
         {
+            string[] authors = Authors.Split(',');
             if (ModelState.IsValid)
             {
                 db.Entry(book).State = EntityState.Modified;
                 db.SaveChanges();
+                db.Database.ExecuteSqlCommand("DELETE FROM BookAuthor WHERE BookID = " + book.BookID);
+                foreach (var authorId in authors)
+                {
+                    db.Database.ExecuteSqlCommand("INSERT INTO BookAuthor VALUES (" + book.BookID + ", " + authorId + ")");
+                }
                 return RedirectToAction("Index");
             }
             return View(book);

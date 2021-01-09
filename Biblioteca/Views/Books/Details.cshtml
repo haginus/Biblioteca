@@ -61,10 +61,12 @@
             <th>
                 Available
             </th>
+            <th></th>
         </tr>
 
         @foreach (var item in Model.BookCopies)
         {
+            var isAvailable = item.isAvailable();
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.CopyID)
@@ -73,14 +75,29 @@
                     @Html.DisplayFor(modelItem => item.Publisher.Name)
                 </td>
                 <td>
-                    @{ 
-                        var isAvailable = item.isAvailable();
-                    }
                     @Html.DisplayFor(modelItem => isAvailable)
+                </td>
+                <td>
+                    @if (isAvailable)
+                    {
+                        @Html.ActionLink("Edit", "Edit", "BookCopies", new { id = item.CopyID }, null)
+                        <span>|</span>
+                        @Html.ActionLink("Delete", "Delete", "BookCopies", new { id = item.CopyID }, null)
+                        <span>|</span>
+                        @Html.ActionLink("Rent", "CreateByBook", "Rents", new { copyId = item.CopyID }, null)
+                    }
+                    else
+                    {
+                        var lastRent = item.getLastRent();
+                        @Html.ActionLink("See Rent", "Details", "Rents", new { id = lastRent.RentID }, null)
+                    }
                 </td>
             </tr>
         }
     </table>
+    <div style="text-align:center; margin-bottom: 10px;">
+        <button onclick="location.href='@Url.Action("Create", "BookCopies", new { id = Model.BookID })';return false;" class="btn btn-primary">Add new copy</button>
+    </div>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.BookID }) |

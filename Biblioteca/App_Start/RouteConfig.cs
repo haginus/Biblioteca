@@ -14,6 +14,18 @@ namespace Biblioteca
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "CreateRentByCustomer",
+                url: "Rents/Create/c/{customerId}",
+                defaults: new { controller = "Rents", action = "CreateByCustomer" }
+            );
+
+            routes.MapRoute(
+                name: "CreateRentByBook",
+                url: "Rents/Create/b/{copyId}",
+                defaults: new { controller = "Rents", action = "CreateByBook" }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
