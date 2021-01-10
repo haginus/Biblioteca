@@ -47,6 +47,7 @@
           <Property Name="CNP" Type="nvarchar" MaxLength="50" />
           <Property Name="FirstName" Type="nchar" MaxLength="50" />
           <Property Name="LastName" Type="nchar" MaxLength="50" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="Publisher">
           <Key>
@@ -68,7 +69,9 @@
           <Property Name="DateReturned" Type="datetime" />
         </EntityType>
         <Association Name="FK_dbo_BookAuthor_dbo_AuthorId">
-          <End Role="Author" Type="Self.Author" Multiplicity="1" />
+          <End Role="Author" Type="Self.Author" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="BookAuthor" Type="Self.BookAuthor" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Author">
@@ -80,7 +83,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_dbo_BookAuthor_dbo_BookID">
-          <End Role="Book" Type="Self.Book" Multiplicity="1" />
+          <End Role="Book" Type="Self.Book" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="BookAuthor" Type="Self.BookAuthor" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Book">
@@ -221,6 +226,7 @@
           <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
           <Property Name="LastName" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="Rents" Relationship="Self.FK_dbo_Rent_dbo_CustomerID" FromRole="Customer" ToRole="Rent" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Publisher">
           <Key>
@@ -366,6 +372,7 @@
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="LibraryModel.Customer">
               <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
                 <ScalarProperty Name="CNP" ColumnName="CNP" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />

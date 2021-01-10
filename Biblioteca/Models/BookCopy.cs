@@ -27,7 +27,7 @@ namespace Biblioteca.Models
 
             Rent max = new Rent();
             max.RentID = 0;
-            foreach(Rent rent in this.Rents)
+            foreach (Rent rent in this.Rents)
             {
                 if (rent.RentID > max.RentID)
                     max = rent;
@@ -40,7 +40,7 @@ namespace Biblioteca.Models
             Rent lastRent = this.getLastRent();
             return lastRent == null ? true : lastRent.IsReturned;
         }
-    
+
         public int CopyID { get; set; }
         public int BookID { get; set; }
         public int PublisherID { get; set; }

@@ -56,7 +56,7 @@ namespace Biblioteca.Controllers
             {
                 db.BookCopies.Add(bookCopy);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Books", new { id = bookCopy.BookID });
             }
 
             ViewBag.BookID = new SelectList(db.Books, "BookID", "Name", bookCopy.BookID);
@@ -92,7 +92,7 @@ namespace Biblioteca.Controllers
             {
                 db.Entry(bookCopy).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", "Books", new { id = bookCopy.BookID });
             }
             ViewBag.BookID = new SelectList(db.Books, "BookID", "Name", bookCopy.BookID);
             ViewBag.PublisherID = new SelectList(db.Publishers, "PublisherID", "Name", bookCopy.PublisherID);
@@ -122,7 +122,7 @@ namespace Biblioteca.Controllers
             BookCopy bookCopy = db.BookCopies.Find(id);
             db.BookCopies.Remove(bookCopy);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Details", "Books", new { id = bookCopy.BookID });
         }
 
         protected override void Dispose(bool disposing)
