@@ -158,7 +158,12 @@ namespace Biblioteca.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    userManager.AddToRole(user.Id, "Customer");
+                    userManager.AddToRole(user.Id, "Customer"); // Add role of Customer
+                    var dbCtx = new LibraryEntities();
+                    var customer = new Customer { CNP = model.CNP, FirstName = model.FirstName, LastName = model.LastName, UserId = user.Id };
+                    dbCtx.Customers.Add(customer); // Create the customer in the Library DB
+                    dbCtx.SaveChanges();
+
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
