@@ -11,18 +11,34 @@ namespace Biblioteca.Models
 {
     using System;
     using System.Collections.Generic;
-    
-    public partial class Rent
+    using System.ComponentModel.DataAnnotations;
+
+    public partial class Rent : IValidatableObject
     {
         public int RentID { get; set; }
+        [Required]
         public int CopyID { get; set; }
+        [Required]
         public int CustomerID { get; set; }
+        [Required]
         public System.DateTime DateStart { get; set; }
+        [Required]
+        [Display(Name = "End date")]
         public System.DateTime DateEnd { get; set; }
         public bool IsReturned { get; set; }
         public Nullable<System.DateTime> DateReturned { get; set; }
     
         public virtual BookCopy BookCopy { get; set; }
         public virtual Customer Customer { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (DateStart > DateEnd)
+            {
+                yield return new ValidationResult(
+                    $"End date of rent can't be set earlier than date of start.",
+                    new[] { nameof(DateEnd) });
+            }
+        }
     }
 }

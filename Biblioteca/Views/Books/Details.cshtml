@@ -61,7 +61,11 @@
             <th>
                 Available
             </th>
-            <th></th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th></th>
+
+            }
         </tr>
 
         @foreach (var item in Model.BookCopies)
@@ -77,29 +81,38 @@
                 <td>
                     @Html.DisplayFor(modelItem => isAvailable)
                 </td>
-                <td>
-                    @if (isAvailable)
-                    {
-                        @Html.ActionLink("Edit", "Edit", "BookCopies", new { id = item.CopyID }, null)
-                        <span>|</span>
-                        @Html.ActionLink("Delete", "Delete", "BookCopies", new { id = item.CopyID }, null)
-                        <span>|</span>
-                        @Html.ActionLink("Rent", "CreateByBook", "Rents", new { copyId = item.CopyID }, null)
-                    }
-                    else
-                    {
-                        var lastRent = item.getLastRent();
-                        @Html.ActionLink("See Rent", "Details", "Rents", new { id = lastRent.RentID }, null)
-                    }
-                </td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        @if (isAvailable)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "BookCopies", new { id = item.CopyID }, null)
+                            <span>|</span>
+                            @Html.ActionLink("Delete", "Delete", "BookCopies", new { id = item.CopyID }, null)
+                            <span>|</span>
+                            @Html.ActionLink("Rent", "CreateByBook", "Rents", new { copyId = item.CopyID }, null)
+                        }
+                        else
+                        {
+                            var lastRent = item.getLastRent();
+                            @Html.ActionLink("See Rent", "Details", "Rents", new { id = lastRent.RentID }, null)
+                        }
+                    </td>
+                }
             </tr>
         }
     </table>
-    <div style="text-align:center; margin-bottom: 10px;">
-        <button onclick="location.href='@Url.Action("Create", "BookCopies", new { id = Model.BookID })';return false;" class="btn btn-primary">Add new copy</button>
-    </div>
+    @if (User.IsInRole("Admin")) {
+        <div style="text-align:center; margin-bottom: 10px;">
+            <button onclick="location.href='@Url.Action("Create", "BookCopies", new { id = Model.BookID })';return false;" class="btn btn-primary">Add new copy</button>
+        </div>
+    }
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.BookID }) |
+    @if (User.IsInRole("Admin"))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.BookID })
+        <span>|</span>
+    }
     @Html.ActionLink("Back to List", "Index")
 </p>

@@ -1,0 +1,21 @@
+﻿@model Biblioteca.Models.Rent
+
+@{
+    ViewBag.Title = "Mark as returned";
+}
+
+<h2>Mark returned</h2>
+
+<h3>Are you sure you want to mark this rent as returned?</h3>
+<div>
+    <hr />
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Mark as returned" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

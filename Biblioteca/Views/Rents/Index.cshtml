@@ -18,46 +18,72 @@
             @Html.DisplayNameFor(model => model.DateEnd)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IsReturned)
+            Book
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DateReturned)
+            Customer
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.BookCopy.CopyID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Customer.CNP)
+            Status
         </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateStart)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateEnd)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsReturned)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateReturned)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.BookCopy.CopyID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Customer.CNP)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.RentID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.RentID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.RentID })
-        </td>
-    </tr>
+    var startDate = item.DateStart.ToString("MMM d, yyyy");
+    var endDate = item.DateEnd.ToString("MMM d, yyyy");
+    var returnedDate = item.DateReturned != null ? ((DateTime) (item.DateReturned)).ToString("MMM d, yyyy") : "";
+    var customerName = item.Customer.LastName + " " + item.Customer.FirstName;
+    var today = DateTime.Today;
+    var bookString = item.BookCopy.Book.Name + " #" + item.CopyID;
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => startDate)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => endDate)
+    </td>
+    <td>
+        @Html.ActionLink(bookString, "Details", "Books", new { id = item.BookCopy.BookID }, null)
+    </td>
+    <td>
+        @Html.ActionLink(customerName, "Details", "Customers", new { id = item.Customer.CustomerID }, null)
+    </td>
+    <td>
+        @if (item.IsReturned) // Available Cell
+        {
+            <span class="label label-success">Returned on @returnedDate</span>
+        }
+        else
+        {
+            if (today > item.DateEnd)
+            {
+                <span class="label label-danger">Expired</span>
+            }
+            else
+            {
+                if ((item.DateEnd - DateTime.Today).TotalDays <= 3)
+                {
+                    <span class="label label-warning">Ends soon</span>
+                }
+                else
+                {
+                    <span class="label label-default">Not returned</span>
+                }
+            }
+        }
+    </td>
+    <td>
+        @if (!item.IsReturned)
+        {
+            @Html.ActionLink("Extend", "Extend", new { id = item.RentID })
+            <span>|</span>
+            @Html.ActionLink("Mark returned", "Return", new { id = item.RentID })
+            <span>|</span>
+        }
+
+    </td>
+</tr>
 }
 
 </table>

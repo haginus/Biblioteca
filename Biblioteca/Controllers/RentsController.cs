@@ -44,6 +44,7 @@ namespace Biblioteca.Controllers
             ViewBag.CopyID = new SelectList(bookCopyFields, "CopyID", "Details");
             var customerFields = db.Customers.Select(c => new { CustomerId = c.CustomerID, Details = c.FirstName + " " + c.LastName + " (" + c.CNP + ")" });
             ViewBag.CustomerID = new SelectList(customerFields, "CustomerID", "Details");
+            ViewBag.DateStart = DateTime.Today;
             return View();
         }
 
@@ -54,6 +55,7 @@ namespace Biblioteca.Controllers
             ViewBag.CopyID = new SelectList(bookCopyFields, "CopyID", "Details");
             var customerFields = db.Customers.Select(c => new { CustomerId = c.CustomerID, Details = c.FirstName + " " + c.LastName + " (" + c.CNP + ")" });
             ViewBag.CustomerID = new SelectList(customerFields, "CustomerID", "Details", customerId);
+            ViewBag.DateStart = DateTime.Today;
             return View("Create");
         }
 
@@ -64,6 +66,7 @@ namespace Biblioteca.Controllers
             ViewBag.CopyID = new SelectList(bookCopyFields, "CopyID", "Details", copyId);
             var customerFields = db.Customers.Select(c => new { CustomerId = c.CustomerID, Details = c.FirstName + " " + c.LastName + " (" + c.CNP + ")" });
             ViewBag.CustomerID = new SelectList(customerFields, "CustomerID", "Details");
+            ViewBag.DateStart = DateTime.Today;
             return View("Create");
         }
 
@@ -74,20 +77,23 @@ namespace Biblioteca.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CopyID,CustomerID,DateStart,DateEnd")] Rent rent)
         {
-            if (ModelState.IsValid)
+            rent.DateStart = DateTime.Today;
+            if(rent.DateEnd < rent.DateStart)
             {
+                ViewBag.Errors = "Date of end can't be earlier than today.";
+                return Create();
+            }
+            if (ModelState.IsValid)
+            {   
                 db.Rents.Add(rent);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CopyID = new SelectList(db.BookCopies, "CopyID", "CopyID", rent.CopyID);
-            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CNP", rent.CustomerID);
-            return View(rent);
+            return Create();
         }
 
-        // GET: Rents/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Extend(int? id)
         {
             if (id == null)
             {
@@ -98,31 +104,36 @@ namespace Biblioteca.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CopyID = new SelectList(db.BookCopies, "CopyID", "CopyID", rent.CopyID);
-            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CNP", rent.CustomerID);
+            if(rent.IsReturned)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             return View(rent);
         }
 
-        // POST: Rents/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "RentID,CopyID,CustomerID,DateStart,DateEnd,IsReturned,DateReturned")] Rent rent)
+        public ActionResult Extend([Bind(Include = "RentID,DateEnd")] Rent rent)
         {
-            if (ModelState.IsValid)
+            Rent oldRent = db.Rents.Find(rent.RentID);
+            if (oldRent == null)
             {
-                db.Entry(rent).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return HttpNotFound();
             }
-            ViewBag.CopyID = new SelectList(db.BookCopies, "CopyID", "CopyID", rent.CopyID);
-            ViewBag.CustomerID = new SelectList(db.Customers, "CustomerID", "CNP", rent.CustomerID);
-            return View(rent);
+            if (oldRent.DateEnd >= rent.DateEnd)
+            {
+                ViewBag.Errors = "The new date should be bigger than the last one.";
+                return View(oldRent);
+            }
+            oldRent.DateEnd = rent.DateEnd;
+
+            db.Entry(oldRent).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
-        // GET: Rents/Delete/5
-        public ActionResult Delete(int? id)
+        // GET: Rents/Return/5
+        public ActionResult Return(int? id)
         {
             if (id == null)
             {
@@ -136,13 +147,23 @@ namespace Biblioteca.Controllers
             return View(rent);
         }
 
-        // POST: Rents/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Rents/Return/5
+        [HttpPost, ActionName("Return")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult ReturnConfirmed(int id)
         {
             Rent rent = db.Rents.Find(id);
-            db.Rents.Remove(rent);
+            if(rent == null)
+            {
+                return HttpNotFound();
+            }
+            if(rent.IsReturned)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            rent.IsReturned = true;
+            rent.DateReturned = DateTime.Today;
+            db.Entry(rent).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -312,10 +312,11 @@
     <Content Include="Views\BookCopies\Edit.cshtml" />
     <Content Include="Views\BookCopies\Index.cshtml" />
     <Content Include="Views\Rents\Create.cshtml" />
-    <Content Include="Views\Rents\Delete.cshtml" />
+    <Content Include="Views\Rents\Return.cshtml" />
     <Content Include="Views\Rents\Details.cshtml" />
     <Content Include="Views\Rents\Edit.cshtml" />
     <Content Include="Views\Rents\Index.cshtml" />
+    <Content Include="Views\Rents\Extend.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -332,6 +333,9 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Validators\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
