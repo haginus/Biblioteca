@@ -65,14 +65,17 @@ namespace Biblioteca.Models
     public class RegisterViewModel
     {
         [Required]
+        [StringLength(128)]
         [Display(Name = "First Name")]
         public string FirstName { get; set; }
         
         [Required]
+        [StringLength(128)]
         [Display(Name = "First Name")]
         public string LastName { get; set; }
 
         [Required]
+        [Validators.CnpValidator]
         public string CNP { get; set; }
 
         [Required]

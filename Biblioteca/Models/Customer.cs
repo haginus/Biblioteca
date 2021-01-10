@@ -11,7 +11,8 @@ namespace Biblioteca.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Customer
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,9 +22,22 @@ namespace Biblioteca.Models
         }
     
         public int CustomerID { get; set; }
+
+        [Required]
+        [Validators.CnpValidator]
         public string CNP { get; set; }
+
+        [Required]
+        [StringLength(128)]
+        [Display(Name ="First Name")]
         public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(128)]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
+        
+        [Required]
         public string UserId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
