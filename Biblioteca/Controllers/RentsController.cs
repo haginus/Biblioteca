@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Biblioteca.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Biblioteca.Controllers
 {
@@ -15,13 +16,29 @@ namespace Biblioteca.Controllers
         private LibraryEntities db = new LibraryEntities();
 
         // GET: Rents
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             var rents = db.Rents.Include(r => r.BookCopy).Include(r => r.Customer);
             return View(rents.ToList());
         }
 
+        [Authorize(Roles = "Customer")]
+        public ActionResult MyRents()
+        {
+            var ctx = new ApplicationDbContext();
+            var uid = User.Identity.GetUserId();
+            ApplicationUser user = ctx.Users.Find(uid);
+            if (user == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var rents = db.Customers.Where(c => c.UserId == uid).First().Rents.ToList();
+            return View(rents);
+        }
+
         // GET: Rents/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -37,6 +54,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Rents/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {   
             var bookCopyFields = db.BookCopies.Where(bc => bc.Rents.Count() == 0 || bc.Rents.OrderByDescending(p => p.RentID).Select(r => r.IsReturned).FirstOrDefault())
@@ -48,6 +66,7 @@ namespace Biblioteca.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult CreateByCustomer(int customerId)
         {
             var bookCopyFields = db.BookCopies.Where(bc => bc.Rents.Count() == 0 || bc.Rents.OrderByDescending(p => p.RentID).Select(r => r.IsReturned).FirstOrDefault())
@@ -59,6 +78,7 @@ namespace Biblioteca.Controllers
             return View("Create");
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult CreateByBook(int copyId)
         {
             var bookCopyFields = db.BookCopies.Where(bc => bc.Rents.Count() == 0 || bc.Rents.OrderByDescending(p => p.RentID).Select(r => r.IsReturned).FirstOrDefault())
@@ -73,6 +93,7 @@ namespace Biblioteca.Controllers
         // POST: Rents/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CopyID,CustomerID,DateStart,DateEnd")] Rent rent)
@@ -93,6 +114,7 @@ namespace Biblioteca.Controllers
             return Create();
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Extend(int? id)
         {
             if (id == null)
@@ -111,6 +133,7 @@ namespace Biblioteca.Controllers
             return View(rent);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Extend([Bind(Include = "RentID,DateEnd")] Rent rent)
@@ -133,6 +156,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Rents/Return/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Return(int? id)
         {
             if (id == null)
@@ -148,6 +172,7 @@ namespace Biblioteca.Controllers
         }
 
         // POST: Rents/Return/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Return")]
         [ValidateAntiForgeryToken]
         public ActionResult ReturnConfirmed(int id)

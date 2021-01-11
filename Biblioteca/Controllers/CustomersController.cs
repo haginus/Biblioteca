@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Biblioteca.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Biblioteca.Controllers
 {

@@ -11,7 +11,8 @@ namespace Biblioteca.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class BookCopy
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -42,8 +43,12 @@ namespace Biblioteca.Models
         }
 
         public int CopyID { get; set; }
+        
+        [Required]
         public int BookID { get; set; }
+        [Required]
         public int PublisherID { get; set; }
+        [Range(1, 10000)]
         public Nullable<int> Pages { get; set; }
     
         public virtual Book Book { get; set; }

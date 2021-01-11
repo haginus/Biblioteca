@@ -11,7 +11,8 @@ namespace Biblioteca.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class Book
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,8 +23,17 @@ namespace Biblioteca.Models
         }
     
         public int BookID { get; set; }
+
+        [Required]
+        [StringLength(128)]
+        [Display(Name = "Title")]
         public string Name { get; set; }
+
+        [StringLength(1024)]
         public string Description { get; set; }
+        
+        [Range(1, 5000)]
+        [Display(Name = "Year Released")]
         public Nullable<int> YearReleased { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

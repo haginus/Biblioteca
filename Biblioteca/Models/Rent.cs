@@ -16,12 +16,16 @@ namespace Biblioteca.Models
     public partial class Rent : IValidatableObject
     {
         public int RentID { get; set; }
+        
         [Required]
         public int CopyID { get; set; }
+        
         [Required]
         public int CustomerID { get; set; }
+        
         [Required]
         public System.DateTime DateStart { get; set; }
+        
         [Required]
         [Display(Name = "End date")]
         public System.DateTime DateEnd { get; set; }

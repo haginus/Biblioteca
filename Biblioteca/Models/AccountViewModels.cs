@@ -71,7 +71,7 @@ namespace Biblioteca.Models
         
         [Required]
         [StringLength(128)]
-        [Display(Name = "First Name")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         [Required]
