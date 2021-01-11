@@ -4,11 +4,14 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Books</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
 <table class="table">
     <tr>
         <th>
@@ -21,24 +24,30 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    var authors = String.Join(", ", item.Authors.Select(author => author.FirstName + " " + author.LastName));
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => authors)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.YearReleased)
-    </td>
-    <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.BookID }) |
-        @Html.ActionLink("Details", "Details", new { id = item.BookID }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.BookID })
-    </td>
-</tr>
-}
+    @foreach (var item in Model)
+    {
+        var authors = String.Join(", ", item.Authors.Select(author => author.FirstName + " " + author.LastName));
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => authors)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.YearReleased)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.BookID })
+                @if (User.IsInRole("Admin"))
+                {
+                    <span>|</span>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.BookID })
+                    <span>|</span>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.BookID })
+                }
+            </td>
+        </tr>
+    }
 
 </table>

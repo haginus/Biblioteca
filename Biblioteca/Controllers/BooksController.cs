@@ -37,6 +37,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Books/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             var serializer = new JavaScriptSerializer();
@@ -50,6 +51,7 @@ namespace Biblioteca.Controllers
         // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Name,YearReleased,Description")] Book book, string Authors)
@@ -70,6 +72,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Books/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -94,6 +97,7 @@ namespace Biblioteca.Controllers
         // POST: Books/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "BookID,Name,YearReleased,Description")] Book book, string Authors)
@@ -114,6 +118,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Books/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -129,6 +134,7 @@ namespace Biblioteca.Controllers
         }
 
         // POST: Books/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
