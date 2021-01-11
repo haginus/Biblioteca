@@ -37,6 +37,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: BookCopies/Create/<ParentBookId>
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(int id)
         {
             ViewBag.BookID = new SelectList(db.Books, "BookID", "Name", id);
@@ -48,6 +49,7 @@ namespace Biblioteca.Controllers
         // POST: BookCopies/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "BookID,PublisherID,Pages")] BookCopy bookCopy)
@@ -65,6 +67,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: BookCopies/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -84,6 +87,7 @@ namespace Biblioteca.Controllers
         // POST: BookCopies/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CopyID,BookID,PublisherID,Pages")] BookCopy bookCopy)
@@ -100,6 +104,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: BookCopies/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -115,6 +120,7 @@ namespace Biblioteca.Controllers
         }
 
         // POST: BookCopies/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

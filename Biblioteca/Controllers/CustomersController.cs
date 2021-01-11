@@ -16,12 +16,14 @@ namespace Biblioteca.Controllers
         private LibraryEntities db = new LibraryEntities();
 
         // GET: Customers
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             return View(db.Customers.ToList());
         }
 
         // GET: Customers/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -37,6 +39,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Customers/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -54,6 +57,7 @@ namespace Biblioteca.Controllers
         // POST: Customers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "CustomerID,CNP,FirstName,LastName,UserId")] Customer customer)
@@ -68,6 +72,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Customers/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -83,6 +88,7 @@ namespace Biblioteca.Controllers
         }
 
         // POST: Customers/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
