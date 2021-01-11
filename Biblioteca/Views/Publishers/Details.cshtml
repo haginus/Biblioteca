@@ -1,0 +1,91 @@
+﻿@model Biblioteca.Models.Publisher
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Publisher</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            ID
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PublisherID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+    </dl>
+
+    <h4>Book Copies</h4>
+    @if (Model.BookCopies.Count() > 0)
+    {
+
+        <table class="table">
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    Book
+                </th>
+                <th>
+                    Available
+                </th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th></th>
+
+                }
+            </tr>
+
+            @foreach (var item in Model.BookCopies)
+            {
+                var isAvailable = item.isAvailable();
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CopyID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Publisher.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => isAvailable)
+                    </td>
+                    <td>
+                        @if (isAvailable)
+                        {
+                            @Html.ActionLink("Edit", "Edit", "BookCopies", new { id = item.CopyID }, null)
+                            <span>|</span>
+                            @Html.ActionLink("Delete", "Delete", "BookCopies", new { id = item.CopyID }, null)
+                            <span>|</span>
+                            @Html.ActionLink("Rent", "CreateByBook", "Rents", new { copyId = item.CopyID }, null)
+                        }
+                        else
+                        {
+                            var lastRent = item.getLastRent();
+                            @Html.ActionLink("See Rent", "Details", "Rents", new { id = lastRent.RentID }, null)
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    } else
+    {
+        <span>No book copies.</span>
+    }
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PublisherID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
