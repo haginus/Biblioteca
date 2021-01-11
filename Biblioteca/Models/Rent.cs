@@ -18,6 +18,7 @@ namespace Biblioteca.Models
         public int RentID { get; set; }
         
         [Required]
+        [Validators.CopyIdValidator]
         public int CopyID { get; set; }
         
         [Required]
